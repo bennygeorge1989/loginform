@@ -1,5 +1,5 @@
 <?php
-	include_once('view/header.php');
+  include_once('view/header.php');
 ?>
 <h2>Login</h2>
 
