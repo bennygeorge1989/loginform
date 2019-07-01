@@ -15,7 +15,7 @@
     <input type="password" placeholder="Enter Password" name="pwd" required>
         
     <input type="submit" class="button" value = 'Login' name ='submit'>
-    <a href = "signup.php" class = "button">Signup</a>
+    <a href = "index.php?action=signup" class = "button">Signup</a>
   </div>
   <div class="container" style="background-color:#f1f1f1">
   </div>

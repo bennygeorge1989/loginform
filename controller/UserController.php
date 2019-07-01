@@ -1,9 +1,5 @@
 <?php
 include_once('model/DbTransactions.php');
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-
 
 class UserController
 {
@@ -13,11 +9,19 @@ class UserController
 
     public function getaction($url)
     {
-        if(isset($_POST['email'])) {
-            $this->loginUser($_POST);
-        }
         $parts = parse_url($url);
         parse_str($parts['query'], $action);
+
+        if(isset($_POST['email']) && $action['action'] == 'login') {
+            $this->loginUser($_POST);
+        }
+
+        if(isset($_POST['email']) && $action['action'] == 'signup') {
+            $this->registerUser($_POST);
+        }
+
+        $sessionUser =  $this->loggedUserExists((string) $action['action']);
+        
 
         switch ($action['action']) {
             case 'login':
@@ -46,7 +50,7 @@ class UserController
             $login = $this->DbTransactions->loginUser($post['email'], $post['pwd']);
 
             if($login) {
-               header('Location:index.php?action=dashboard');
+               $this->redirectPage('action=dashboard');
             }
         }
     }
@@ -58,10 +62,49 @@ class UserController
         if($user) {
             $this->render('dashboard');
         } else {
-            $this->render('login');
+            $this->redirectPage('action=login&error=login error');
         }
         
     }
+
+    public function registerUser($post)
+    {
+        if ($post['pwd'] == $post['cpwd']) {
+            $email = $this->DbTransactions->isUserExist($post['email']);
+
+            if (!$email) {
+                $register = $this->DbTransactions->userRegister($post);
+
+                if($register) {
+                    $this->redirectPage('action=dashboard');
+                    exit;
+                }
+                $this->redirectPage('action=signup&error=signup error');
+                exit;
+            } 
+
+            $_SESSION['error'] = 'Email already exists';
+            $this->redirectPage('action=signup');
+            exit;
+        } 
+
+        $_SESSION['error'] = 'Password not matching';
+        $this->redirectPage('action=signup');
+    }
+
+    public function redirectPage($url)
+    {
+        header('Location:index.php?'.$url);
+    }
+
+    public function loggedUserExists($action)
+    { 
+        if($action != 'dashboard' && isset($_SESSION['user_id'])) {
+            $this->redirectPage('action=dashboard');
+            exit;
+        }
+    }
+
     
 }
 
