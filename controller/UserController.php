@@ -7,6 +7,10 @@ class UserController
         $this->DbTransactions = new DbTransactions();    
     }
 
+    /**
+     * load the required page based on the url
+     * @param string $url
+     */
     public function getaction($url)
     {
         $parts = parse_url($url);
@@ -39,11 +43,19 @@ class UserController
         }      
     }
      
+    /**
+     * load the required view for action
+     * @param string $action
+     */
     public function render($action)
     {
         include './view/'.$action.'.php';
     }
 
+    /**
+     * login for user
+     * @param array $post
+     */
     public function loginUser(array $post)
     { 
         if (!empty($post['email']) && !empty($post['pwd'])) {
@@ -55,6 +67,10 @@ class UserController
         }
     }
 
+    /**
+     * get user details of logged in user
+     * @param array $post
+     */
     public function getUser()
     { 
         $user = $this->DbTransactions->getUser((int) $_SESSION['user_id']);
@@ -67,6 +83,10 @@ class UserController
         
     }
 
+     /**
+     * user registration
+     * @param array $post
+     */
     public function registerUser($post)
     {
         if ($post['pwd'] == $post['cpwd']) {
@@ -92,11 +112,19 @@ class UserController
         $this->redirectPage('action=signup');
     }
 
+    /**
+     * navigation function to a given page
+     * @param string $url
+     */
     public function redirectPage($url)
     {
         header('Location:index.php?'.$url);
     }
 
+    /**
+     * check user is logged in or not
+     * @param string $action
+     */
     public function loggedUserExists($action)
     { 
         if($action != 'dashboard' && isset($_SESSION['user_id'])) {

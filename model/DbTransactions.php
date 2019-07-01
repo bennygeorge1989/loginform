@@ -9,7 +9,14 @@ class DbTransactions
         $this->db = $this->conn->connect();
     }
 
-    public function loginUser($emailId, $password) : bool
+    /**
+     * login user witht he given credentials
+     * @param string $emailId
+     * @param string $password
+     *
+     * @return boolean
+     */
+    public function loginUser(string $emailId, string $password) : bool
     {
         $pwd = md5($password);
         $result = mysqli_query($this->db, "SELECT * FROM signup WHERE email = '".$emailId."' AND password = '".$pwd."'");
@@ -26,6 +33,12 @@ class DbTransactions
         return false;
     }
 
+    /**
+     * get the logged in user details
+     * @param int $id
+     *
+     * @return boolean
+     */
     public function getUser(int $id) : bool
     {
         $result = mysqli_query($this->db, "SELECT * FROM signup WHERE id = '".$id."'");
@@ -43,7 +56,13 @@ class DbTransactions
         return false;
     }
 
-    public function isUserExist($emailId) : array
+    /**
+     * check the email already exist or not
+     * @param string $emailId
+     *
+     * @return boolean
+     */
+    public function isUserExist(string $emailId) : array
     {
         $db = $this->conn->connect();
         $query = mysqli_query($db, "SELECT * FROM signup WHERE email = '".$emailId."'");
@@ -56,6 +75,12 @@ class DbTransactions
         return $result;
     }
 
+    /**
+     * insert user details to table
+     * @param string $emailId
+     *
+     * @return boolean
+     */
     public function userRegister(array $data) : bool
     {
         $dataList = [
@@ -83,11 +108,11 @@ class DbTransactions
         
         if($new_user_id) {
             $_SESSION['user_id'] = $new_user_id;
-echo 'ssdddd';
+
 			return true;
         }
         $_SESSION['error'] = 'Error occurred Try again later';
-echo 'asasss';exit;
+
         return false;
     }
 }
