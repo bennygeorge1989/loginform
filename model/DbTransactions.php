@@ -21,7 +21,7 @@ class DbTransactions
         $pwd = md5($password);
         $result = mysqli_query($this->db, "SELECT * FROM signup WHERE email = '".$emailId."' AND password = '".$pwd."'");
         $user_exists = mysqli_num_rows($result);	
-
+        
         if($user_exists>=1) {
             $user = mysqli_fetch_array($result,MYSQLI_ASSOC);
             $_SESSION['user_id'] = $user["id"];
